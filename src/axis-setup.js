@@ -1,0 +1,1 @@
+export const web_url = "https://cobalt-blue-chipmunk-hose.cyclic.app"
