@@ -47,15 +47,16 @@ const CreateProduct = () => {
       productData.append("quantity", quantity);
       productData.append("photo", photo);
       productData.append("category", category);
-      const { data } = axios.post(
+      const {data}  = await axios.post(
         `${web_url}/api/v1/product/create-product`,
         productData
       );
-      if (data?.success) {
+      console.log(data)
+      if (!data?.success) {
         toast.error(data?.message);
       } else {
         toast.success("Product Created Successfully");
-        navigate(`${web_url}/dashboard/admin/products`);
+        navigate(`/dashboard/admin/products`);
       }
     } catch (error) {
       console.log(error);
