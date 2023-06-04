@@ -68,11 +68,9 @@ const CartPage = () => {
     }
   };
   const paymentHandler = async (e) => {
-    const API_URL = "http://localhost:8080/api/v1"
     e.preventDefault();
-    // const orderUrl = `${API_URL}order`;
     console.log(cart)
-    const response = await axios.post(`${API_URL}/payment/create-payment`,{"cart":cart});
+    const response = await axios.post(`${web_url}/api/v1/payment/create-payment`, { "cart": cart });
     const { data } = response;
     const options = {
       key: process.env.RAZOR_PAY_KEY_ID,
@@ -82,10 +80,13 @@ const CartPage = () => {
       handler: async (response) => {
         try {
           console.log(response)
-         const paymentId = response.razorpay_payment_id;
-         const url = `${API_URL}/payment/capture-payment/${paymentId}`;
-         const captureResponse = await axios.post(url, response)
-         console.log(captureResponse.data);
+          localStorage.setItem("cart",JSON.stringify([]))
+          navigate("/dashboard/user/orders");
+          toast.success("Payment Completed Successfully ");
+          // const paymentId = response.razorpay_payment_id;
+          // const url = `${web_url}/api/v1/payment/capture-payment/${paymentId}`;
+          // const captureResponse = await axios.post(url, response)
+          // console.log(captureResponse.data);
         } catch (err) {
           console.log(err);
         }
@@ -96,7 +97,7 @@ const CartPage = () => {
     };
     const rzp1 = new window.Razorpay(options);
     rzp1.open();
-    };
+  };
   return (
     <Layout>
       <div className=" cart-page">
@@ -108,9 +109,8 @@ const CartPage = () => {
                 : `Hello  ${auth?.token && auth?.user?.name}`}
               <p className="text-center">
                 {cart?.length
-                  ? `You Have ${cart.length} items in your cart ${
-                      auth?.token ? "" : "please login to checkout !"
-                    }`
+                  ? `You Have ${cart.length} items in your cart ${auth?.token ? "" : "please login to checkout !"
+                  }`
                   : " Your Cart Is Empty"}
               </p>
             </h1>
@@ -119,7 +119,7 @@ const CartPage = () => {
         <div className="container ">
           <div className="row ">
             <div className="col-md-7  p-0 m-0">
-              {cart?.map((p,k) => (
+              {cart?.map((p, k) => (
                 <div className="row card flex-row" key={k}>
                   <div className="col-md-4">
                     <img
@@ -148,7 +148,6 @@ const CartPage = () => {
             </div>
             <div className="col-md-5 cart-summary ">
               <h2>Cart Summary</h2>
-              <button onClick={paymentHandler}>Pay Now</button>
               <p>Total | Checkout | Payment</p>
               <hr />
               <h4>Total : {totalPrice()} </h4>
@@ -165,7 +164,7 @@ const CartPage = () => {
                     </button>
                   </div>
                 </>
-              ) : ( 
+              ) : (
                 <div className="mb-3">
                   {auth?.token ? (
                     <button
@@ -189,8 +188,8 @@ const CartPage = () => {
                 </div>
               )}
               <div className="mt-2">
-                { !cart?.length < 0 ? (
-                  "" 
+                {!cart?.length < 0 ? (
+                  ""
                 ) : (
                   <>
                     <DropIn
@@ -206,9 +205,9 @@ const CartPage = () => {
                     <button
                       className="btn btn-primary"
                       onClick={paymentHandler}
-                      disabled={!auth?.user?.address}
+                      disabled={!cart?.length}
                     >
-                       Make Payment
+                      Make Payment
                     </button>
                   </>
                 )}

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import UserMenu from "../../components/Layout/UserMenu";
 import Layout from "./../../components/Layout/Layout";
 import axios from "axios";
@@ -31,6 +31,7 @@ const Orders = () => {
           <div className="col-md-9">
             <h1 className="text-center">All Orders</h1>
             {orders?.map((o, i) => {
+              let priceCnt = 0.00
               return (
                 <div className="border shadow">
                   <table className="table">
@@ -41,6 +42,7 @@ const Orders = () => {
                         <th scope="col">Buyer</th>
                         <th scope="col"> date</th>
                         <th scope="col">Payment</th>
+                        <th scope="col">Total</th>
                         <th scope="col">Quantity</th>
                       </tr>
                     </thead>
@@ -50,7 +52,13 @@ const Orders = () => {
                         <td>{o?.status}</td>
                         <td>{o?.buyer?.name}</td>
                         <td>{moment(o?.createAt).fromNow()}</td>
-                        <td>{o?.payment.success ? "Success" : "Failed"}</td>
+                        {
+                        o?.payment ? 
+                        (<td id="payment-suc" >Success</td>) : 
+                        (<td id="payment-fail" >Failed</td>)
+                        
+                        }
+                        <td>{o?.total}</td>
                         <td>{o?.products?.length}</td>
                       </tr>
                     </tbody>

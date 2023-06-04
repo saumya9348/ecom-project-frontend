@@ -9,7 +9,7 @@ import { web_url } from "../../axis-setup";
 const ForgotPasssword = () => {
   const [email, setEmail] = useState("");
   const [newPassword, setNewPassword] = useState("");
-  const [answer, setAnswer] = useState("");
+  const [otp, setOtp] = useState("");
 
   const navigate = useNavigate();
 
@@ -20,7 +20,7 @@ const ForgotPasssword = () => {
       const res = await axios.post(`${web_url}/api/v1/auth/forgot-password`, {
         email,
         newPassword,
-        answer,
+        otp,
       });
       if (res && res.data.success) {
         toast.success(res.data && res.data.message);
@@ -34,6 +34,13 @@ const ForgotPasssword = () => {
       toast.error("Something went wrong");
     }
   };
+  const requestOtp = async (e) => {
+    e.preventDefault();
+    const res = await axios.post(`${web_url}/mail`, {
+      email,
+    });
+  }
+  
   return (
     <Layout title={"Forgot Password - Ecommerce APP"}>
       <div className="form-container ">
@@ -53,26 +60,27 @@ const ForgotPasssword = () => {
           </div>
           <div className="mb-3">
             <input
-              type="text"
-              value={answer}
-              onChange={(e) => setAnswer(e.target.value)}
-              className="form-control"
-              id="exampleInputEmail1"
-              placeholder="Enter Your favorite Sport Name "
-              required
-            />
-          </div>
-          <div className="mb-3">
-            <input
               type="password"
               value={newPassword}
               onChange={(e) => setNewPassword(e.target.value)}
               className="form-control"
               id="exampleInputPassword1"
-              placeholder="Enter Your Password"
+              placeholder="Enter Your New Password"
               required
             />
           </div>
+          <div className="mb-3">
+            <input
+              type="text"
+              value={otp}
+              onChange={(e) => setOtp(e.target.value)}
+              className="form-control"
+              id="exampleInputEmail1"
+              placeholder="Enter Otp "
+            />
+          </div>
+
+          <div className="btn btn-success" onClick={(e)=>requestOtp(e)}>Request Otp</div> <br/><br/>
 
           <button type="submit" className="btn btn-primary">
             RESET
